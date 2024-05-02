@@ -1,8 +1,9 @@
 XKE_NAMESPACE_BEGIN
 
 // Vec2 Impl
+
 template<class T_> requires std::is_arithmetic_v<T_>
-Vec2<T_>& Vec2<T_>::operator+=(const Vec2<T_>& other)
+Vec2<T_>& Vec2<T_>::operator+=(const Vec2<T_>& other) noexcept
 {
     this->x += other.x;
     this->y += other.y;
@@ -10,7 +11,7 @@ Vec2<T_>& Vec2<T_>::operator+=(const Vec2<T_>& other)
 }
 
 template<class T_> requires std::is_arithmetic_v<T_>
-Vec2<T_>& Vec2<T_>::operator-=(const Vec2<T_>& other)
+Vec2<T_>& Vec2<T_>::operator-=(const Vec2<T_>& other) noexcept
 {
     this->x -= other.x;
     this->y -= other.y;
@@ -18,7 +19,7 @@ Vec2<T_>& Vec2<T_>::operator-=(const Vec2<T_>& other)
 }
 
 template<class T_> requires std::is_arithmetic_v<T_>
-Vec2<T_>& Vec2<T_>::operator+=(float addend)
+Vec2<T_>& Vec2<T_>::operator+=(float addend) noexcept
 {
     this->x += addend;
     this->y += addend;
@@ -26,7 +27,7 @@ Vec2<T_>& Vec2<T_>::operator+=(float addend)
 }
 
 template<class T_> requires std::is_arithmetic_v<T_>
-Vec2<T_>& Vec2<T_>::operator-=(float minuend)
+Vec2<T_>& Vec2<T_>::operator-=(float minuend) noexcept
 {
     this->x -= minuend;
     this->y -= minuend;
@@ -34,7 +35,7 @@ Vec2<T_>& Vec2<T_>::operator-=(float minuend)
 }
 
 template<class T_> requires std::is_arithmetic_v<T_>
-    Vec2<T_>& Vec2<T_>::operator*=(float factor)
+    Vec2<T_>& Vec2<T_>::operator*=(float factor) noexcept
 {
     this->x *= factor;
     this->y *= factor;
@@ -42,7 +43,7 @@ template<class T_> requires std::is_arithmetic_v<T_>
 }
 
 template<class T_> requires std::is_arithmetic_v<T_>
-Vec2<T_>& Vec2<T_>::operator/=(float divisor)
+Vec2<T_>& Vec2<T_>::operator/=(float divisor) noexcept
 {
     __xke_assert(divisor == 0, "Cannot divide by 0");
 

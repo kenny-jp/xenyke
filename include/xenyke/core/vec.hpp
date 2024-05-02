@@ -9,20 +9,45 @@ template<class T_> requires std::is_arithmetic_v<T_>
 class Vec2
 {
 public:
-    explicit Vec2() noexcept : x(0), y(0) {};
+    explicit Vec2() noexcept : x(0), y(0) {}
     Vec2(T_ x, T_ y) noexcept : x(x), y(y) {}
     ~Vec2() noexcept = default;
 
-    Vec2& operator+=(const Vec2& other);
-    Vec2& operator-=(const Vec2& other);
-    Vec2& operator+=(float addend);
-    Vec2& operator-=(float minuend);
-    Vec2& operator*=(float factor);
-    Vec2& operator/=(float divisor);
+    Vec2& operator+=(const Vec2& other) noexcept;
+    Vec2& operator-=(const Vec2& other) noexcept;
+    Vec2& operator+=(float addend) noexcept;
+    Vec2& operator-=(float minuend) noexcept;
+    Vec2& operator*=(float factor) noexcept;
+    Vec2& operator/=(float divisor) noexcept;
 
     T_ x;
     T_ y;
 };
+
+template<class T_> requires std::is_arithmetic_v<T_>
+Vec2<T_> XKE_API operator+(const Vec2<T_>& lhs, const Vec2<T_>& rhs);
+
+template<class T_> requires std::is_arithmetic_v<T_>
+Vec2<T_> XKE_API operator-(const Vec2<T_>& lhs, const Vec2<T_>& rhs);
+
+template<class T_> requires std::is_arithmetic_v<T_>
+Vec2<T_> XKE_API operator+(const Vec2<T_>& lhs, float addend);
+
+template<class T_> requires std::is_arithmetic_v<T_>
+Vec2<T_> XKE_API operator-(const Vec2<T_>& lhs, float minuend);
+
+template<class T_> requires std::is_arithmetic_v<T_>
+Vec2<T_> XKE_API operator*(const Vec2<T_>& lhs, float factor);
+
+template<class T_> requires std::is_arithmetic_v<T_>
+Vec2<T_> XKE_API operator/(const Vec2<T_>& lhs, float divisor);
+
+template<class T_> requires std::is_arithmetic_v<T_>
+bool XKE_API operator==(const Vec2<T_>& lhs, const Vec2<T_>& rhs);
+
+template<class T_> requires std::is_arithmetic_v<T_>
+bool XKE_API operator!=(const Vec2<T_>& lhs, const Vec2<T_>& rhs);
+
 
 template<class T_> requires std::is_arithmetic_v<T_>
 class Vec3
@@ -44,15 +69,30 @@ public:
     T_ z;
 };
 
-template<class T_>
-bool operator==(const Vec2<T_>& lhs, const Vec2<T_>& rhs);
-template<class T_>
-bool operator!=(const Vec2<T_>& lhs, const Vec2<T_>& rhs);
+template<class T_> requires std::is_arithmetic_v<T_>
+Vec2<T_> XKE_API operator+(const Vec3<T_>& lhs, const Vec3<T_>& rhs);
+
+template<class T_> requires std::is_arithmetic_v<T_>
+Vec2<T_> XKE_API operator-(const Vec3<T_>& lhs, const Vec3<T_>& rhs);
+
+template<class T_> requires std::is_arithmetic_v<T_>
+Vec2<T_> XKE_API operator+(const Vec3<T_>& lhs, float addend);
+
+template<class T_> requires std::is_arithmetic_v<T_>
+Vec2<T_> XKE_API operator-(const Vec3<T_>& lhs, float minuend);
+
+template<class T_> requires std::is_arithmetic_v<T_>
+Vec2<T_> XKE_API operator*(const Vec3<T_>& lhs, float factor);
+
+template<class T_> requires std::is_arithmetic_v<T_>
+Vec2<T_> XKE_API operator/(const Vec3<T_>& lhs, float divisor);
 
 template<class T_>
-bool operator==(const Vec3<T_>& lhs, const Vec3<T_>& rhs);
+bool XKE_API operator==(const Vec3<T_>& lhs, const Vec3<T_>& rhs);
+
 template<class T_>
-bool operator!=(const Vec3<T_>& lhs, const Vec3<T_>& rhs);
+bool XKE_API operator!=(const Vec3<T_>& lhs, const Vec3<T_>& rhs);
+
 
 using Vec2i = Vec2<int32_t>;
 using Vec2u = Vec2<uint32_t>;
