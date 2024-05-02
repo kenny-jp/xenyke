@@ -16,5 +16,5 @@ else()
 endif()
 
 xke_add_module(core)
-# xke_add_module(ecs)
+xke_add_module(logger)
 
