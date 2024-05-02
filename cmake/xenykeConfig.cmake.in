@@ -1,0 +1,11 @@
+set(XENYKE_VERSION @XKE_VERSION@)
+
+@PACKAGE_INIT@
+
+set_and_check(XENYKE_INCLUDE_DIR "@PACKAGE_INCLUDE_INSTALL_DIR@")
+
+check_required_components(xenyke)
+
+include(CMakeFindDependencyMacro)
+find_dependency(glfw3)
+include("${CMAKE_CURRENT_LIST_DIR}/xenykeTargets.cmake")
