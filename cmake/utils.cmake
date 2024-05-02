@@ -44,18 +44,22 @@ endfunction()
 
 function(xke_add_library module)
     set(SOURCES ${ARGN})
-    add_library(xke-${module} ${SOURCES})
-    set_target_properties(xke-${module}
-        PROPERTIES
-        LINKER_LANGUAGE CXX
-        CXX_STANDARD 20
-        INCLUDE_DIRECTORIES ${CMAKE_SOURCE_DIR}/include/
-    )
+    if(SOURCES)
+        add_library(xke-${module} ${SOURCES})
+        set_target_properties(xke-${module}
+            PROPERTIES
+            LINKER_LANGUAGE CXX
+            CXX_STANDARD 20
+            INCLUDE_DIRECTORIES ${CMAKE_SOURCE_DIR}/include/
+        )
+    endif()
 endfunction()
 
 function(xke_add_module module)
     xke_check_headers(${module})
 
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/${module})
+    if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/src/${module}/CMakeLists.txt)
+        add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/${module})
+    endif()
 
 endfunction()
