@@ -10,7 +10,7 @@ namespace logger::console::esc_code {
 namespace style {
 static XKE_INLINE_CONSTEXPR const std::string_view Bold      = "\033[1m";
 static XKE_INLINE_CONSTEXPR const std::string_view Underline = "\033[4m";
-static XKE_INLINE_CONSTEXPR const std::string_view Reset     = "\033[0m";
+static XKE_INLINE_CONSTEXPR const std::string_view Default     = "\033[0m";
 } // namespace style
 
 namespace color {
@@ -22,7 +22,7 @@ static XKE_INLINE_CONSTEXPR const std::string_view Yellow    = "\033[38;2;255;25
 static XKE_INLINE_CONSTEXPR const std::string_view Cyan      = "\033[38;2;0;255;255m";
 static XKE_INLINE_CONSTEXPR const std::string_view Magenta   = "\033[38;2;255;0;255m";
 static XKE_INLINE_CONSTEXPR const std::string_view White     = "\033[38;2;255;255;255m";
-static XKE_INLINE_CONSTEXPR const std::string_view Reset     = style::Reset;
+static XKE_INLINE_CONSTEXPR const std::string_view Default     = style::Default;
 
 } // namespace color
 

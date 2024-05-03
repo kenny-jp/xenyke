@@ -3,8 +3,14 @@
 
 # include <xenyke/logger/level.hpp>
 # include <xenyke/logger/time.hpp>
-# include <xenyke/logger/console/console_line.hpp>
+# include <xenyke/logger/console/console_line_style.hpp>
 # include <xenyke/logger/console/console_esc_code.hpp>
+
+# ifdef XKE_DEBUG
+#  define xkeDebug(...) xke::logger::console::console_default_t::debug(__VA_ARGS__)
+# else
+#  define xkeDebug(...)
+# endif
 
 # include <vector>
 
@@ -14,81 +20,112 @@ namespace logger::console {
 
 using console_msg_buffer_t = std::vector<char>;
 
-template<TimeFormat Tf_, class DebugStyle, class ErrorStyle,
-        class FatalErrorStyle, class InfoStyle, class WarningStyle>
+template<TimeFormat Tf_>
 class console_t;
 
-using console_default_t = console_t<TimeFormat::hhmmss, console_line_no_color_t,
-                                console_line_no_color_t, console_line_no_color_t,
-                                console_line_no_color_t,console_line_no_color_t>;
+using console_default_t = console_t<TimeFormat::hhmmss>;
+using console_notime_t = console_t<TimeFormat::null>;
 
-using console_color_t = console_t<TimeFormat::hhmmss, console_line_default_debug_t,
-                                console_line_default_error_t, console_line_default_fatalError_t,
-                                console_line_default_info_t, console_line_default_warning_t>;
 
-template<TimeFormat Tf_, class DebugStyle, class ErrorStyle,
-        class FatalErrorStyle, class InfoStyle, class WarningStyle>
+template<TimeFormat Tf_>
 class console_t
 {
 public:
     template<class... Args>
-    static void writeConsole(std::format_string<Args...> fmt, Args&&... args)
-    {
-        std::string msg = std::format(fmt, std::forward<Args>(args)...);
-        __xke_write_console(msg.data(), msg.size());
+    static void debug(std::format_string<Args...> msg, Args&&... args) {
+        write<Level::Debug>(std::format(msg, std::forward<Args>(args)...));
     }
 
-    static void writeConsole(const Level level, std::string_view msg)
-    {
-        auto timestr = getCurrentTimeString(Tf_);
-        auto levelstr = levelToString(level);
+    static void debug(const std::string& msg) {
+        write<Level::Debug>(msg);
+    }
 
-        std::string buffer;
-        buffer += timestr;
-        buffer += levelstr;
-        buffer += msg;
+    template<class... Args>
+    static void error(std::format_string<Args...> msg, Args&&... args) {
+        write<Level::Error>(std::format(msg, std::forward<Args>(args)...));
+    }
 
-        __xke_write_console(buffer.data(), buffer.size());
+    static void error(const std::string& msg) {
+        write<Level::Error>(msg);
+    }
+
+    template<class... Args>
+    static void fatalError(std::format_string<Args...> msg, Args&&... args) {
+        write<Level::FatalError>(std::format(msg, std::forward<Args>(args)...));
+    }
+
+    static void fatalError(const std::string& msg) {
+        write<Level::FatalError>(msg);
+    }
+
+    template<class... Args>
+    static void info(std::format_string<Args...> msg, Args&&... args) {
+        write<Level::Info>(std::format(msg, std::forward<Args>(args)...));
+    }
+
+    static void info(const std::string& msg) {
+        write<Level::Info>(msg);
+    }
+
+    template<class... Args>
+    static void warning(std::format_string<Args...> msg, Args&&... args) {
+        write<Level::Warning>(std::format(msg, std::forward<Args>(args)...));
+    }
+
+    static void warning(const std::string& msg) {
+        write<Level::Warning>(msg);
     }
 
 private:
-
-
-    template<CharColor ChColor_, CharStyle ChStyle_, class... Args>
-    static constexpr size_t calculateBufferSize(const Args&... args)
+    template<Level Level_>
+    static void write(const std::string& msg)
     {
-        size_t bufferSize = (args.size() + ... ) + 2;
+        const std::string timestr = getCurrentTimeString(Tf_);
+        const std::string_view levelstr = levelToString(Level_);
 
-        bufferSize += std::size(esc_code::style::Reset)
-                      + ((ChColor_ != CharColor::Default ? std::size(get_char_color(ChColor_)) : 0))
-                      + ((ChStyle_ != CharStyle::Default ? std::size(get_char_style(ChStyle_)) : 0));
+        const size_t bufferSize = calculateBufferSize<Level_>(timestr, levelstr, msg);
+        console_msg_buffer_t buffer(bufferSize, '.');
 
-        return bufferSize;
+        writeBuffer<Level_>(buffer, timestr, levelstr, msg);
+        __xke_write_console(buffer.data(), buffer.size());
     }
 
-    template<CharColor ChColor_, CharStyle ChStyle_, class... Args>
+    template<Level Level_, class... Args>
+    static XKE_CONSTEXPR size_t calculateBufferSize(const Args&... args)
+    {
+        size_t bufferSize = (args.size() + ...);
+
+        bufferSize += (internals::LevelToLine<Level_>::value::color != esc_code::color::Default ||
+                               internals::LevelToLine<Level_>::value::color != esc_code::color::Default ?
+                           std::size(esc_code::style::Default) : 0)
+                      + (internals::LevelToLine<Level_>::value::color != esc_code::color::Default ? std::size(internals::LevelToLine<Level_>::value::color) : 0)
+                      + (internals::LevelToLine<Level_>::value::style != esc_code::style::Default ? std::size(internals::LevelToLine<Level_>::value::style) : 0);
+
+        return bufferSize + 1;
+    }
+
+    template<Level Level_, class... Args>
     static void writeBuffer(console_msg_buffer_t& buffer, Args&&... args)
     {
-        auto it = buffer.begin();
+        std::vector<char>::iterator it = buffer.begin();
 
-        if XKE_CONSTEXPR (ChColor_ != CharColor::Default) {
-            XKE_CONSTEXPR auto color = get_char_color(ChColor_);
-            it = std::copy(color.begin(), color.end(), it);
+        if (internals::LevelToLine<Level_>::value::color != esc_code::color::Default) {
+            it = std::copy(internals::LevelToLine<Level_>::value::color.begin(),
+                           internals::LevelToLine<Level_>::value::color.end(), it);
         }
 
-        if XKE_CONSTEXPR (ChStyle_ != CharStyle::Default) {
-            XKE_CONSTEXPR auto style = get_char_style(ChStyle_);
-            it = std::copy(style.begin(), style.end(), it);
+        if (internals::LevelToLine<Level_>::value::style != esc_code::style::Default) {
+            it = std::copy(internals::LevelToLine<Level_>::value::style.begin(),
+                           internals::LevelToLine<Level_>::value::style.end(), it);
         }
 
-        (..., (it = std::copy(args.begin(), args.end(), it)));
+        ((it = std::copy(args.begin(), args.end(), it)), ...);
 
-        if XKE_CONSTEXPR (ChColor_ != CharColor::Default) {
-            it = std::copy(esc_code::style::Reset.begin(), esc_code::style::Reset.end(), it);
+        if (internals::LevelToLine<Level_>::value::color != esc_code::color::Default) {
+            it = std::copy(esc_code::style::Default.begin(), esc_code::style::Default.end(), it);
         }
 
         ++(*it) = '\n';
-        buffer.back() = '\0';
     }
 
 };

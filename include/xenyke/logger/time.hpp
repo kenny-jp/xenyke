@@ -19,7 +19,7 @@ enum class TimeFormat
     null
 };
 
-constexpr std::string getCurrentTimeString(TimeFormat tf)
+std::string getCurrentTimeString(TimeFormat tf)
 {
     if (tf == TimeFormat::null) {
         return "";
