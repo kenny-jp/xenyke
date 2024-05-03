@@ -6,12 +6,6 @@
 # include <xenyke/logger/console/console_line_style.hpp>
 # include <xenyke/logger/console/console_esc_code.hpp>
 
-# ifdef XKE_DEBUG
-#  define xkeDebug(...) xke::logger::console::console_default_t::debug(__VA_ARGS__)
-# else
-#  define xkeDebug(...)
-# endif
-
 # include <vector>
 
 XKE_NAMESPACE_BEGIN
