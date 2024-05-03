@@ -1,0 +1,8 @@
+if(glfw3_FOUND)
+    set(USE_GLFW_SYSTEM 1 PARENT_SCOPE)
+else()
+    option(GLFW_BUILD_DOCS     "" OFF)
+    option(GLFW_BUILD_EXAMPLES "" OFF)
+    option(GLFW_INSTALL        "" ON)
+    add_subdirectory(glfw/)
+endif()
