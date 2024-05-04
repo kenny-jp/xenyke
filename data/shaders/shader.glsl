@@ -8,12 +8,11 @@ out vec4 ourColor;
 out vec2 texCoord;
 
 uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
+uniform mat4 vp; // projection * view
 
 void main()
 {
-    gl_Position = projection * view * model * vec4(aPos, 1.0);
+    gl_Position = vp * model * vec4(aPos, 1.0);
     ourColor = aColor;
     texCoord = aTexCoord;
 }
