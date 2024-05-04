@@ -9,7 +9,7 @@
 
 XKE_NAMESPACE_BEGIN
 
-    class Monitor
+class Monitor
 {
     // Delete default ctor and copy ctors
     explicit Monitor() = delete;

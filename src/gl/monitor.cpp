@@ -3,7 +3,7 @@
 
 XKE_NAMESPACE_BEGIN
 
-    class InternalMonitor
+class InternalMonitor
 {
 public:
     static void monitor_callback(GLFWmonitor *__m, int __ev)

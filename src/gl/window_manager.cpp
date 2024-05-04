@@ -35,6 +35,8 @@ XKE_NODISCARD  GLFWwindow* WindowManager::createWindow(int32_t width, int32_t he
         throw Exception("Failed to initialize OpenGL context.");
     }
 
+    glEnable(GL_DEPTH_TEST);
+
     glfwSwapInterval(1);
 
     glfwSetWindowCloseCallback(window, WindowManager::close_callback);
@@ -53,7 +55,10 @@ void WindowManager::close_callback(GLFWwindow *window)
 
 void WindowManager::framebuffer_size_callback(GLFWwindow *window, int32_t width, int32_t height)
 {
-    getWindowInstancePtr(window)->framebufferResizeEvent(width, height);
+    RectInt rect(0, 0, width, height);
+    // glfwGetWindowFrameSize(window, &rect.x, &rect.y, nullptr, nullptr);
+
+    getWindowInstancePtr(window)->framebufferResizeEvent(rect);
 }
 
 void WindowManager::window_size_callback(GLFWwindow* window, int32_t width, int32_t height)
