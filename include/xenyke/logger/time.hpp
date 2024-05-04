@@ -19,7 +19,7 @@ enum class TimeFormat
     null
 };
 
-std::string getCurrentTimeString(TimeFormat tf)
+inline std::string getCurrentTimeString(TimeFormat tf)
 {
     if (tf == TimeFormat::null) {
         return "";
@@ -49,6 +49,7 @@ std::string getCurrentTimeString(TimeFormat tf)
     case TimeFormat::null:
         break;
     }
+
     return buffer;
 }
 
