@@ -7,12 +7,11 @@ layout (location = 2) in vec2 aTexCoord;
 out vec4 ourColor;
 out vec2 texCoord;
 
-uniform mat4 model;
-uniform mat4 vp; // projection * view
+uniform mat4 mvp; // projection * view
 
 void main()
 {
-    gl_Position = vp * model * vec4(aPos, 1.0);
+    gl_Position = mvp * vec4(aPos, 1.0);
     ourColor = aColor;
     texCoord = aTexCoord;
 }
