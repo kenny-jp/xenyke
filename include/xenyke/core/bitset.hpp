@@ -8,15 +8,12 @@ XKE_NAMESPACE_BEGIN
 
 struct Bit
 {
-    bool v;
+    Bit() noexcept : v_(false) {}
+    Bit(bool value) noexcept : v_(value) {}
 
-    Bit(bool value) : v(value) {}
+    operator bool() const noexcept { return v_; }
 
-    Bit& operator=(bool value)
-    {
-       this->v = value;
-       return *this;
-    }
+    bool v_;
 };
 
 class Bitset
@@ -24,12 +21,19 @@ class Bitset
 public:
     explicit Bitset(size_t nbBits);
 
-    void set(size_t pos, bool value = true);
-
+    Bit get(size_t pos) const;
     size_t size() const;
+
+    void set();
+    void set(size_t pos, bool value = true);
+    void reset();
+    void reset(size_t pos, bool value = true);
 
     Bit operator[](size_t pos);
     Bit operator[](size_t pos) const;
+
+    bool operator==(const Bitset& other) const;
+    bool operator!=(const Bitset& other) const;
 
     Bitset& operator&=(const Bitset& other);
     Bitset& operator|=(const Bitset& other);
@@ -38,9 +42,13 @@ public:
     void print();
 
 private:
-    std::vector<Bit> bits;
+    std::vector<Bit> bits_;
 
 };
+
+Bitset operator&(const Bitset& lhs, const Bitset& rhs);
+Bitset operator|(const Bitset& lhs, const Bitset& rhs);
+Bitset operator^(const Bitset& lhs, const Bitset& rhs);
 
 XKE_NAMESPACE_END
 
