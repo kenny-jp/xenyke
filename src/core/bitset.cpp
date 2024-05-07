@@ -64,7 +64,7 @@ Bitset &Bitset::operator&=(const Bitset& other)
     size_t maxSize = std::min(size(), other.size());
 
     for (size_t i {0}; i < maxSize; ++i) {
-        const bool b = this->bits_[i].v_ && other.bits_[i].v_;
+        const bool b = this->bits_[i] && other.bits_[i];
         this->bits_[i] = b;
     }
 
@@ -74,7 +74,7 @@ Bitset &Bitset::operator&=(const Bitset& other)
 Bitset &Bitset::operator|=(const Bitset &other)
 {
     for (size_t i {0}; i < other.size(); ++i) {
-        const bool b = this->bits_[i].v_ || other.bits_[i].v_;
+        const bool b = this->bits_[i] || other.bits_[i];
         if(i < other.size()) {
             this->bits_[i] = b;
         } else {
@@ -88,7 +88,7 @@ Bitset &Bitset::operator|=(const Bitset &other)
 Bitset &Bitset::operator^=(const Bitset &other)
 {
     for (size_t i {0}; i < other.size(); ++i) {
-        const bool b = this->bits_[i].v_ != other.bits_[i].v_;
+        const bool b = this->bits_[i] != other.bits_[i];
         if(i < other.size()) {
             this->bits_[i] = b;
         } else {
@@ -103,7 +103,7 @@ void Bitset::print()
 {
     std::ostringstream oss;
     for(const auto& b : bits_) {
-        oss << b.v_;
+        oss << b;
     }
     xkeDebug(oss.str());
 }

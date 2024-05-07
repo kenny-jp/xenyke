@@ -6,13 +6,13 @@
 
 XKE_NAMESPACE_BEGIN
 
-struct Bit
+class Bit
 {
-    Bit() noexcept : v_(false) {}
-    Bit(bool value) noexcept : v_(value) {}
-
+public:
+    Bit(bool value = false) noexcept : v_(value) {}
     operator bool() const noexcept { return v_; }
 
+private:
     bool v_;
 };
 
