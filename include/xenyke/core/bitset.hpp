@@ -3,6 +3,7 @@
 
 # include <xenyke/core/config.hpp>
 # include <vector>
+# include <xenyke/core/debug.hpp>
 
 XKE_NAMESPACE_BEGIN
 
@@ -38,6 +39,15 @@ public:
     Bitset& operator&=(const Bitset& other);
     Bitset& operator|=(const Bitset& other);
     Bitset& operator^=(const Bitset& other);
+
+    // friend
+    // __ostream_base& operator<<(__ostream_base& s, const Bitset& bitset)
+    // {
+    //     for(const auto& b : bitset.bits_) {
+    //         s << static_cast<bool>(b);
+    //     }
+    //     return s;
+    // }
 
     void print();
 

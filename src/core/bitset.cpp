@@ -1,5 +1,4 @@
 # include <xenyke/core/bitset.hpp>
-# include <xenyke/logger/debug.hpp>
 # include <sstream>
 
 XKE_NAMESPACE_BEGIN
@@ -105,7 +104,7 @@ void Bitset::print()
     for(const auto& b : bits_) {
         oss << b;
     }
-    xkeDebug(oss.str());
+    // xkeDebug(oss.str());
 }
 
 Bitset operator&(const Bitset &lhs, const Bitset &rhs)

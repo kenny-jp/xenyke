@@ -1,24 +1,39 @@
-#include <xenyke/core.hpp>
-#include <xenyke/gl.hpp>
-#include <xenyke/eng/camera.hpp>
-#include <xenyke/core/bitset.hpp>
+// #include <xenyke/core.hpp>
+// #include <xenyke/gl.hpp>
+// #include <xenyke/eng/camera.hpp>
+// #include <xenyke/core/bitset.hpp>
+// #include <xenyke/logger/debug.hpp>
+#include <xenyke/core/debug.hpp>
 
 int main()
 {
-    xke::xkeinit();
+    bool b = true;
+    float pi = 3.1415886980;
+    xkeDebug() << xke::boolalpha << b << "\n"
+               << xke::noboolalpha << b << "\n"
+               << pi << "\n";
+    // xkeDebug("Bonjour moi j'ai {} ans", age) << " Hahaha";
 
-    xke::Bitset b1(8);
-    b1.set(4, true);
-    b1.set(7, true);
-    xke::Bitset b2(8);
-    b2.set(0, true);
-    b2.set(2, true);
-    b2.set(3, true);
-    b1.print();
-    b2.print();
+    return 0;
 
-    b1 |= b2;
-    b1.print();
+    // xke::xkeinit();
+    // std::cout << std::fixed << std::numeric_limits<float>::max() << std::endl;
+
+    // xke::Bitset b2(4);
+    // b2.set(0, true);
+    // // b2.set(1, true);
+    // b2.set(2, true);
+    // b1.print();
+    // b2.print();
+
+    // b1 &= b2;
+    // b1.print();
+
+    // auto b3 = b1 & b2;
+    // b3.print();
+
+    // auto b4 = b1 | b2;
+    // b4.print();
 
     // xke::Window window(800, 800, "MyWin");
 
@@ -67,5 +82,5 @@ int main()
     // program.destroy();
     // buff.destroy();
 
-    return xke::xkeTerminate();
+    // return xke::xkeTerminate();
 }
