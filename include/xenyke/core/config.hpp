@@ -1,17 +1,6 @@
 # ifndef XKE_CORE_CONFIG_HPP
 # define XKE_CORE_CONFIG_HPP
 
-# if defined(__linux__)
-#  include <unistd.h>
-#  define __xke_write(OUTPUT, STR, STRLEN) ::write(OUTPUT, STR, STRLEN)
-#  define __xke_write_console(STR, STRLEN) \
-     ::write(STDOUT_FILENO, STR, STRLEN)
-#  define __xke_write_console_error(STR, STRLEN) \
-     ::write(STDERR_FILENO, STR, STRLEN)
-#  define XKE_OS_UNIX
-# else
-#  error "Operating system not supported"
-# endif
 # ifndef NDEBUG
 # define XKE_DEBUG
 # endif
@@ -53,7 +42,18 @@
 # define XKE_PRINTF_FORMAT(fmt_idx, var_args_idx) __attribute__((format(printf, fmt_idx, var_args_idx)))
 # define XKE_UNUSED(x) (void)(x)
 
+# if defined(__linux__)
+#  include <unistd.h>
+#  define __xke_write(OUTPUT, STR, STRLEN) ::write(OUTPUT, STR, STRLEN)
+#  define __xke_write_stdout(STR, STRLEN)  ::write(STDOUT_FILENO, STR, STRLEN)
+#  define __xke_write_stderr(STR, STRLEN)  ::write(STDERR_FILENO, STR, STRLEN)
+#  define XKE_OS_UNIX
+# else
+#  error "Operating system not supported"
+# endif
 # include <exception>
+# define __xke_throw(STR) throw Exception(STR)
+# define __xke_throw_fmt(STR, ...) throw Exception(STR, __VA_ARGS__)
 # include <format>
 # include <memory>
 
@@ -85,19 +85,17 @@ using idnumber_t = uint32_t;
 class Exception : public std::exception
 {
 public:
-    explicit Exception(const std::string& msg)
-        : msg_("XKEException:: " + msg) {}
+    explicit Exception(const std::string& msg) :
+        msg_(std::move(std::string("XKEException:: " + msg).c_str())){}
 
     template<class... Args>
-    explicit Exception(std::format_string<Args...> msg, Args&&... args)
-        : msg_("XKEException:: " + std::format(msg, std::forward<Args>(args)...)) {}
+    explicit Exception(std::format_string<Args...> msg, Args&&... args) :
+        msg_(std::move(std::string("XKEException:: " + std::format(msg, std::forward<Args>(args)...)).c_str())) {}
 
-    virtual const char* what() const noexcept override {
-        return msg_.c_str();
-    }
+    virtual const char* what() const noexcept override { return msg_; }
 
 private:
-    std::string msg_;
+    const char* msg_;
 
 };
 
@@ -106,11 +104,11 @@ XKE_NAMESPACE_END
 # ifdef XKE_DEBUG
 #  include <cassert>
 #  define __xke_assert(EXPR, ...) assert(EXPR __VA_OPT__(&&) __VA_ARGS__)
+#  define XKE_DEBUG_STREAMBUF_SIZE 256
 # else
 #  define __xke_assert(EXPR, ...)
+#  define XKE_DEBUG_STREAMBUF_SIZE 0
 # endif
-# define __xke_throw(STR) throw Exception(STR)
-# define __xke_throw_fmt(STR, ...) throw Exception(STR, __VA_ARGS__)
 
 # define GLSL_VERSION 400
 # define GLSL_VERSION_AS_STRING(x) #x
