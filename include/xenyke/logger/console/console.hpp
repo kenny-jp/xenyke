@@ -81,7 +81,7 @@ private:
         console_msg_buffer_t buffer(bufferSize, '.');
 
         writeBuffer<Level_>(buffer, timestr, levelstr, msg);
-        __xke_write_console(buffer.data(), buffer.size());
+        __xke_write_stdout(buffer.data(), buffer.size());
     }
 
     template<Level Level_, class... Args>
