@@ -1,6 +1,6 @@
 # include <xenyke/gl/ext/glm/gtc/type_ptr.hpp>
 # include <xenyke/gl/shader_program.hpp>
-# include <xenyke/logger/debug.hpp>
+# include <xenyke/core/debug.hpp>
 # include <fstream>
 
 XKE_NAMESPACE_BEGIN

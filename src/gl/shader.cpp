@@ -1,5 +1,5 @@
 # include <xenyke/gl/shader.hpp>
-# include <xenyke/logger/debug.hpp>
+# include <xenyke/core/debug.hpp>
 
 XKE_NAMESPACE_BEGIN
 

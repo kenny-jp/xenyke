@@ -1,5 +1,5 @@
 # include <xenyke/gl/texture.hpp>
-# include <xenyke/logger/debug.hpp>
+# include <xenyke/core/debug.hpp>
 # include <xenyke/gl/ext/gl.h>
 # include "ext/stb_image.h"
 

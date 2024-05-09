@@ -1,5 +1,5 @@
 # include <xenyke/gl/init.hpp>
-# include <xenyke/logger/debug.hpp>
+# include <xenyke/core/debug.hpp>
 # include <GLFW/glfw3.h>
 
 XKE_NAMESPACE_BEGIN
