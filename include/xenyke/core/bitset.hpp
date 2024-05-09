@@ -6,22 +6,38 @@
 
 XKE_NAMESPACE_BEGIN
 
+class ostream;
+
 class Bit
 {
 public:
-    Bit(bool value = false) noexcept : v_(value) {}
-    operator bool() const noexcept { return v_; }
+    Bit(bool value = false) noexcept;
+
+    operator bool() const noexcept;
+
+    Bit& operator&=(const Bit& other);
+    Bit& operator|=(const Bit& other);
+    Bit& operator^=(const Bit& other);
+    Bit& operator~();
 
 private:
-    bool v_;
+    bool value_;
 };
+
+Bit operator&(const Bit& lhs, const Bit& rhs);
+
+Bit operator|(const Bit& lhs, const Bit& rhs);
+
+Bit operator^(const Bit& lhs, const Bit& rhs);
 
 class Bitset
 {
 public:
-    explicit Bitset(size_t nbBits);
+    explicit Bitset();
+    Bitset(size_t nbBits);
 
     Bit get(size_t pos) const;
+    void init(size_t nbbits);
     size_t size() const;
 
     void set();
@@ -38,8 +54,13 @@ public:
     Bitset& operator&=(const Bitset& other);
     Bitset& operator|=(const Bitset& other);
     Bitset& operator^=(const Bitset& other);
+    Bitset& operator~();
 
-    void print();
+    friend
+    ostream& operator<<(ostream& os, const Bitset& bitset);
+
+    friend
+    void xkeDebug(const Bitset& bitset);
 
 private:
     std::vector<Bit> bits_;

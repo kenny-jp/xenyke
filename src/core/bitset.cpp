@@ -1,17 +1,85 @@
 # include <xenyke/core/bitset.hpp>
-# include <xenyke/logger/debug.hpp>
-# include <sstream>
+# include <xenyke/core/debug.hpp>
 
 XKE_NAMESPACE_BEGIN
 
-Bitset::Bitset(size_t nbBits)
+/*
+ * Bit Impl
+ */
+
+Bit::Bit(bool value) noexcept :
+    value_(value) {}
+
+Bit::operator bool() const noexcept
 {
-    bits_.resize(nbBits, false);
+    return value_;
+}
+
+Bit &Bit::operator&=(const Bit &other)
+{
+    value_ &= other.value_;
+    return *this;
+}
+
+Bit &Bit::operator|=(const Bit &other)
+{
+    value_ |= other.value_;
+    return *this;
+}
+
+Bit &Bit::operator^=(const Bit &other)
+{
+    value_ ^= other.value_;
+    return *this;
+}
+
+Bit& Bit::operator~()
+{
+    value_ = !value_;
+    return *this;
+}
+
+Bit operator&(const Bit& lhs, const Bit& rhs)
+{
+    Bit result{lhs};
+    return result &= rhs;
+}
+
+Bit operator|(const Bit& lhs, const Bit& rhs)
+{
+    Bit result{lhs};
+    return result |= rhs;
+}
+
+Bit operator^(const Bit& lhs, const Bit& rhs)
+{
+    Bit result{lhs};
+    return result ^= rhs;
+}
+
+
+/*
+ * Bitset Impl
+ */
+
+Bitset::Bitset() :
+    bits_(0)
+{
+}
+
+Bitset::Bitset(size_t nbBits) :
+    bits_(nbBits, false)
+{
 }
 
 Bit Bitset::get(size_t pos) const
 {
     return bits_[pos];
+}
+
+void Bitset::init(size_t nbbits)
+{
+    bits_.resize(nbbits, false);
 }
 
 void Bitset::set()
@@ -64,8 +132,7 @@ Bitset &Bitset::operator&=(const Bitset& other)
     size_t maxSize = std::min(size(), other.size());
 
     for (size_t i {0}; i < maxSize; ++i) {
-        const bool b = this->bits_[i] && other.bits_[i];
-        this->bits_[i] = b;
+        this->bits_[i] &= other.bits_[i];
     }
 
     return *this;
@@ -73,13 +140,10 @@ Bitset &Bitset::operator&=(const Bitset& other)
 
 Bitset &Bitset::operator|=(const Bitset &other)
 {
-    for (size_t i {0}; i < other.size(); ++i) {
-        const bool b = this->bits_[i] || other.bits_[i];
-        if(i < other.size()) {
-            this->bits_[i] = b;
-        } else {
-            this->bits_.pop_back();
-        }
+    size_t maxSize = std::min(size(), other.size());
+
+    for (size_t i {0}; i < maxSize; ++i) {
+        this->bits_[i] |= other.bits_[i];
     }
 
     return *this;
@@ -87,46 +151,54 @@ Bitset &Bitset::operator|=(const Bitset &other)
 
 Bitset &Bitset::operator^=(const Bitset &other)
 {
-    for (size_t i {0}; i < other.size(); ++i) {
-        const bool b = this->bits_[i] != other.bits_[i];
-        if(i < other.size()) {
-            this->bits_[i] = b;
-        } else {
-            this->bits_.pop_back();
-        }
+    size_t maxSize = std::min(size(), other.size());
+
+    for (size_t i {0}; i < maxSize; ++i) {
+        this->bits_[i] ^= other.bits_[i];
     }
 
     return *this;
 }
 
-void Bitset::print()
+Bitset& Bitset::operator~()
 {
-    std::ostringstream oss;
-    for(const auto& b : bits_) {
-        oss << b;
+    for (Bit& b : bits_) {
+        b = ~b;
     }
-    xkeDebug(oss.str());
+    return *this;
+}
+
+ostream& operator<<(ostream &os, const Bitset &bitset)
+{
+    os << "xke::Bitset(" << bitset.size() << "): ";
+    for (const Bit& b : bitset.bits_) {
+        os << b;
+    }
+
+    return os;
+}
+
+void xkeDebug(const Bitset& bitset)
+{
+    __xke_get_static_debug_t()() << bitset << xke::flush;
 }
 
 Bitset operator&(const Bitset &lhs, const Bitset &rhs)
 {
     Bitset res(lhs);
-    res &= rhs;
-    return res;
+    return res &= rhs;
 }
 
 Bitset operator|(const Bitset &lhs, const Bitset &rhs)
 {
     Bitset res(lhs);
-    res |= rhs;
-    return res;
+    return res |= rhs;
 }
 
 Bitset operator^(const Bitset &lhs, const Bitset &rhs)
 {
     Bitset res(lhs);
-    res ^= rhs;
-    return res;
+    return res ^= rhs;
 }
 
 XKE_NAMESPACE_END
