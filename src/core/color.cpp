@@ -1,93 +1,26 @@
 # include <xenyke/core/color.hpp>
+# include <xenyke/core/ostream.hpp>
 
 XKE_NAMESPACE_BEGIN
 
-Color::Color() noexcept
-    : r_(0.f), g_(0.f), b_(0.f), a_(1.f)
+xke::ostream &operator<<(ostream &os, const ColorRgb &color)
 {
+    os << static_cast<int32_t>(color.red()   * 255) << ":"
+       << static_cast<int32_t>(color.green() * 255) << ":"
+       << static_cast<int32_t>(color.blue()  * 255);
+
+    return os;
 }
 
-Color::Color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha) noexcept
+xke::ostream &operator<<(ostream &os, const ColorRgba &color)
 {
-    setColor(red, green, blue, alpha);
-}
+    os << static_cast<int32_t>(color.red()   * 255) << ":"
+       << static_cast<int32_t>(color.green() * 255) << ":"
+       << static_cast<int32_t>(color.blue()  * 255) << ":"
+       << static_cast<int32_t>(color.alpha() * 255);
 
-Color::Color(uint32_t color) noexcept
-{
-    setColor(color);
-}
-
-uint32_t Color::getColor() const noexcept
-{
-    uint8_t red   = r_ * 255;
-    uint8_t green = g_ * 255;
-    uint8_t blue  = b_ * 255;
-    uint8_t alpha = a_ * 255;
-
-    uint32_t color = (red << 24) |
-            (green << 16) |
-            (blue << 8) |
-            alpha;
-
-    return color;
-}
-
-void Color::setColor(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha) noexcept
-{
-    setRed(red);
-    setGreen(green);
-    setBlue(blue);
-    setAlpha(alpha);
-}
-
-void Color::setColor(uint32_t color) noexcept
-{
-    const uint8_t red   = color >> 24;
-    const uint8_t green = color >> 16;
-    const uint8_t blue  = color >> 8;
-    const uint8_t alpha = color;
-
-    setColor(red, green, blue, alpha);
-}
-
-void Color::setRed(uint8_t value) noexcept
-{
-    r_ = static_cast<float>(value) / 255.f;
-}
-
-void Color::setGreen(uint8_t value) noexcept
-{
-    g_ = static_cast<float>(value) / 255.f;
-}
-
-void Color::setBlue(uint8_t value) noexcept
-{
-    b_ = static_cast<float>(value) / 255.f;
-}
-
-void Color::setAlpha(uint8_t value) noexcept
-{
-    a_ = static_cast<float>(value) / 255.f;
-}
-
-float Color::red() const noexcept
-{
-    return r_;
-}
-
-float Color::green() const noexcept
-{
-    return g_;
-}
-
-float Color::blue() const noexcept
-{
-    return b_;
-}
-
-float Color::alpha() const noexcept
-{
-    return a_;
+    return os;
 }
 
 XKE_NAMESPACE_END
+

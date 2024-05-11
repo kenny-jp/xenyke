@@ -99,7 +99,11 @@ private:
 
 };
 
+class ostream;
+
 XKE_NAMESPACE_END
+
+# define XKE_BITSET_CAPACITY 64
 
 # ifdef XKE_DEBUG
 #  include <cassert>
