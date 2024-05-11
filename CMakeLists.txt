@@ -11,11 +11,11 @@ find_package(glfw3 3.3 QUIET)
 add_subdirectory(libs/)
 
 xke_add_module(core)
-xke_add_module(logger)
-xke_add_module(gl)
-xke_add_module(eng)
+# xke_add_module(logger)
+# xke_add_module(gl)
+# xke_add_module(eng)
 
-target_link_libraries(xke-gl xke-core xke-logger glfw)
+# target_link_libraries(xke-gl xke-core xke-logger glfw)
 
 if(USE_GLFW_SYSTEM)
     set(EXPORT_TARGETS xke-core xke-logger xke-gl)
