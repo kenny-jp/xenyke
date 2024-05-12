@@ -51,20 +51,26 @@
 # else
 #  error "Operating system not supported"
 # endif
-# include <exception>
-# define __xke_throw(STR) throw Exception(STR)
-# define __xke_throw_fmt(STR, ...) throw Exception(STR, __VA_ARGS__)
-# include <format>
+
+# ifdef XKE_DEBUG
+#  include <cassert>
+#  define __xke_assert(EXPR, ...) assert(EXPR __VA_OPT__(&&) __VA_ARGS__)
+#  define XKE_DEBUG_STREAMBUF_SIZE 512
+# else
+#  define __xke_assert(EXPR, ...)
+#  define XKE_DEBUG_STREAMBUF_SIZE 0
+# endif
+
 # include <memory>
 
 XKE_NAMESPACE_BEGIN
 
 template<class T_> using uptr_t = std::unique_ptr<T_>;
 template<class T_> using sptr_t = std::shared_ptr<T_>;
+template<class T_> using obs_ptr_t = T_*;
 
 using handle_t = void*;
-template<class T_>
-T_ handle_cast(handle_t handle) {
+template<class T_> T_ handle_cast(handle_t handle) {
     return reinterpret_cast<T_>(handle);
 }
 
@@ -81,47 +87,12 @@ using uint64_t = unsigned long long int;
 using size_t = uint64_t;
 using enum_t = uint32_t;
 using idnumber_t = uint32_t;
-
-class Exception : public std::exception
-{
-public:
-    explicit Exception(const std::string& msg) :
-        msg_(std::move(std::string("XKEException:: " + msg).c_str())){}
-
-    template<class... Args>
-    explicit Exception(std::format_string<Args...> msg, Args&&... args) :
-        msg_(std::move(std::string("XKEException:: " + std::format(msg, std::forward<Args>(args)...)).c_str())) {}
-
-    virtual const char* what() const noexcept override { return msg_; }
-
-private:
-    const char* msg_;
-
-};
+XKE_INLINE_CONSTEXPR idnumber_t INVALID_ID = UINT32_MAX;
 
 class ostream;
 
 XKE_NAMESPACE_END
 
-# define XKE_BITSET_CAPACITY 64
 
-# ifdef XKE_DEBUG
-#  include <cassert>
-#  define __xke_assert(EXPR, ...) assert(EXPR __VA_OPT__(&&) __VA_ARGS__)
-#  define XKE_DEBUG_STREAMBUF_SIZE 256
-# else
-#  define __xke_assert(EXPR, ...)
-#  define XKE_DEBUG_STREAMBUF_SIZE 0
-# endif
-
-# define GLSL_VERSION 400
-# define GLSL_VERSION_AS_STRING(x) #x
-# define GLSL_SHADER_TYPE(x) #x
-# define GLSL_SHADER_HEADER(version, type) "#version " GLSL_VERSION_AS_STRING(version) " core //" GLSL_SHADER_TYPE(type)
-# define GLSL_VERT_SHADER_HEADER GLSL_SHADER_HEADER(GLSL_VERSION, vertex)
-# define GLSL_FRAG_SHADER_HEADER GLSL_SHADER_HEADER(GLSL_VERSION, fragment)
-
-# define GLFW_INCLUDE_NONE
-# define STB_IMAGE_IMPLEMENTATION // for stb_image.h
 
 # endif // XKE_CORE_CONFIG_HPP

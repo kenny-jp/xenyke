@@ -6,10 +6,16 @@ ostream::ostream() : flags_(ostream_flags(8)), floating_point_precision_(-1) {}
 
 ostream &ostream::operator<<(ostream_flags flag)
 {
-    if (flag == ostream_flags::Flush) {
+    if (flag == ostream_flags::Endl) {
+        buff_.overflow('\n');
+        return *this;
+    }
+    else if (flag == ostream_flags::Flush) {
+        buff_.overflow('\n');
         buff_.flush();
         return *this;
     }
+
     flags_ &= flag;
     return *this;
 }

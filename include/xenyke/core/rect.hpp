@@ -29,6 +29,4 @@ using RectFloat = Rect<double>;
 
 XKE_NAMESPACE_END
 
-# include "rect.inl"
-
 # endif // XKE_CORE_RECT_HPP

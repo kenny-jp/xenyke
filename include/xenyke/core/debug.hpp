@@ -2,6 +2,7 @@
 # define XKE_CORE_DEBUG_HPP
 
 # include <xenyke/core/ostream.hpp>
+# include <format>
 
 XKE_NAMESPACE_BEGIN
 

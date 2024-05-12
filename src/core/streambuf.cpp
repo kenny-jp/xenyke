@@ -33,7 +33,6 @@ void streambuf::flush()
 {
     if (pos_ > 0) {
         __xke_write_stdout(buffer_.data(), pos_);
-        __xke_write_stdout("\n", 1);
         pos_ = 0;
     }
 }

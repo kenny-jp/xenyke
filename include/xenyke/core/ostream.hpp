@@ -2,6 +2,7 @@
 # define XKE_CORE_OSTREAM_HPP
 
 # include <xenyke/core/streambuf.hpp>
+# include <algorithm>
 
 XKE_NAMESPACE_BEGIN
 
@@ -11,11 +12,13 @@ enum class ostream_flags : int32_t
     Dec         = 1L << 1,
     Hex         = 1L << 2,
     Oct         = 1L << 3,
-    Flush       = 1L << 4
+    Endl        = 1L << 4,
+    Flush       = 1L << 5
 };
 
 static constexpr ostream_flags boolalpha    = ostream_flags::BoolAlpha;
 static constexpr ostream_flags noboolalpha  = static_cast<ostream_flags>(~static_cast<int32_t>(boolalpha));
+static constexpr ostream_flags endl         = ostream_flags::Endl;
 static constexpr ostream_flags flush        = ostream_flags::Flush;
 
 XKE_INLINE_CONSTEXPR ostream_flags
