@@ -11,6 +11,7 @@ struct CameraType3D;
 template<class CameraType_>
 class Camera;
 
+
 XKE_NAMESPACE_END
 
 # endif //XKE_ENG_COMMON_HPP
