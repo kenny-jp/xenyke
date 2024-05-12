@@ -1,17 +1,9 @@
-# include <xenyke/gl/ext/glm/gtc/type_ptr.hpp>
-# include <xenyke/gl/shader_program.hpp>
 # include <xenyke/core/debug.hpp>
+# include <xenyke/gl/shader_program.hpp>
+# include <xenyke/gl/ext/glm/gtc/type_ptr.hpp>
 # include <fstream>
 
 XKE_NAMESPACE_BEGIN
-
-ShaderProgram::ShaderProgram(const Shader &vertexShader, const Shader &fragmentShader)
-{
-    id_ = glCreateProgram();
-    glAttachShader(id_, vertexShader.getID());
-    glAttachShader(id_, fragmentShader.getID());
-    link();
-}
 
 ShaderProgram::ShaderProgram(const std::string &filename)
 {
@@ -19,15 +11,15 @@ ShaderProgram::ShaderProgram(const std::string &filename)
     auto[vshader, fshader] = getShaders(filename);
 
     id_ = glCreateProgram();
-    glAttachShader(id_, vshader.getID());
-    glAttachShader(id_, fshader.getID());
+    glAttachShader(id_, vshader.id_);
+    glAttachShader(id_, fshader.id_);
     link();
 
     vshader.destroy();
     fshader.destroy();
 }
 
-void ShaderProgram::destroy()
+void ShaderProgram::destroy() noexcept
 {
     glDeleteProgram(id_);
 }
@@ -75,7 +67,9 @@ void ShaderProgram::link()
     glGetProgramiv(id_, GL_LINK_STATUS, &success);
     if (!success) {
         glGetProgramInfoLog(id_, 512, nullptr, log);
-        xkeDebug(log);
+        xkeDebug() << "ShaderProgram::link(): "
+                   << log
+                   << '\n';
     }
 }
 
@@ -107,8 +101,8 @@ XKE_NODISCARD std::tuple<Shader, Shader> ShaderProgram::getShaders(std::string_v
     const std::string vertexShaderSource(beginIterVertShad, endIterVertShad);
     const std::string fragmentShaderSource(beginIterFragShad, endIterFragShad);
 
-    Shader vshader(vertexShaderSource, ShaderType::Vertex);
-    Shader fshader(fragmentShaderSource, ShaderType::Fragment);
+    Shader vshader(vertexShaderSource, ShaderType::VERTEX);
+    Shader fshader(fragmentShaderSource, ShaderType::FRAGMENT);
 
     return {std::move(vshader), std::move(fshader)};
 }

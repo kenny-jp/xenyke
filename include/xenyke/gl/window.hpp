@@ -1,9 +1,7 @@
 # ifndef XKE_GL_WINDOW_HPP
 # define XKE_GL_WINDOW_HPP
 
-# include <xenyke/core/color.hpp>
-# include <xenyke/core/rect.hpp>
-# include <xenyke/core/vec.hpp>
+# include <xenyke/gl/fwd.hpp>
 
 XKE_NAMESPACE_BEGIN
 

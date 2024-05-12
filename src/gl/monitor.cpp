@@ -1,4 +1,6 @@
+# include <xenyke/core/exception.hpp>
 # include <xenyke/gl/monitor.hpp>
+# include <xenyke/gl/video_mode.hpp>
 # include <GLFW/glfw3.h>
 
 XKE_NAMESPACE_BEGIN

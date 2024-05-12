@@ -5,12 +5,6 @@
 
 XKE_NAMESPACE_BEGIN
 
-enum class BufferUsage : enum_t {
-    STATIC = GL_STATIC_DRAW,
-    DYNAMIC = GL_DYNAMIC_DRAW,
-    STREAM = GL_STREAM_DRAW
-};
-
 template<BufferUsage U_, Primitive Pri_>
 class VertexBuffer
 {
@@ -33,8 +27,8 @@ public:
     void unbind() const;
 
 private:
-    idnumber_t arrayID_;
-    idnumber_t bufferID_;
+    GlObjectID arrayID_;
+    GlObjectID bufferID_;
     size_t size_;
 };
 
@@ -57,7 +51,7 @@ public:
     void unbind() const;
 
 private:
-    idnumber_t elementArrayID_;
+    GlObjectID elementArrayID_;
     std::array<uint32_t, I_> indexes_;
 
 };

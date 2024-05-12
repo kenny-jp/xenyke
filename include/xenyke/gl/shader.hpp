@@ -1,32 +1,28 @@
 # ifndef XKE_GL_SHADER_HPP
 # define XKE_GL_SHADER_HPP
 
-# include <xenyke/core/config.hpp>
-# include <xenyke/gl/ext/gl.h>
+# include <xenyke/gl/gl_object.hpp>
 
 XKE_NAMESPACE_BEGIN
 
-using ShaderID = uint32_t;
-
-enum class ShaderType : enum_t
-{
-    Fragment = GL_FRAGMENT_SHADER,
-    Vertex = GL_VERTEX_SHADER
-};
-
-class Shader
+class Shader : public GlObject
 {
 public:
-    explicit Shader(const std::string& source, ShaderType type);
+    explicit Shader() noexcept;
+    Shader(const std::string& source, ShaderType type);
     ~Shader() noexcept;
 
-    ShaderID getID() const noexcept;
-    void destroy() noexcept;
+    bool set(const std::string& source, ShaderType type);
+
+    void destroy() noexcept override;
 
 private:
-    void compile();
+    bool compile();
 
-    ShaderID id_;
+    GlObjectID id_;
+    ShaderType type_;
+
+    friend class ShaderProgram;
 };
 
 XKE_NAMESPACE_END

@@ -5,7 +5,7 @@
 
 XKE_NAMESPACE_BEGIN
 
-    struct VideoMode
+struct VideoMode
 {
     explicit VideoMode() :
         width_(-1), height_(-1),
@@ -15,10 +15,10 @@ XKE_NAMESPACE_BEGIN
 
     int32_t width_;
     int32_t height_;
-    int32_t redBits_;
-    int32_t greenBits_;
-    int32_t blueBits_;
-    int32_t refreshRate_;
+    int8_t redBits_;
+    int8_t greenBits_;
+    int8_t blueBits_;
+    int8_t refreshRate_;
 };
 
 

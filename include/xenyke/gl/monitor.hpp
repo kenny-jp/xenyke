@@ -1,9 +1,7 @@
 # ifndef XKE_GL_MONITOR_HPP
 # define XKE_GL_MONITOR_HPP
 
-# include <xenyke/core/rect.hpp>
-# include <xenyke/core/vec.hpp>
-# include <xenyke/gl/video_mode.hpp>
+# include <xenyke/gl/fwd.hpp>
 # include <map>
 # include <vector>
 

@@ -1,6 +1,3 @@
-# include <xenyke/gl/ext/gl.h>
-# include <xenyke/gl/primitive.hpp>
-
 XKE_NAMESPACE_BEGIN
 
 /*
@@ -44,7 +41,7 @@ void VertexBuffer<U_, P_>::write(const VertexArray &array)
     glEnableVertexAttribArray(0);
 
     glVertexAttribPointer(1, 4,
-                          GL_FLOAT, GL_FALSE,
+                          GL_UNSIGNED_BYTE, GL_TRUE,
                           sizeof(Vertex),
                           (void*)offsetof(Vertex, color));
 

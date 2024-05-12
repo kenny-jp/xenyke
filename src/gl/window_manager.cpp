@@ -1,5 +1,7 @@
 # include "window_manager.hpp"
+# include <xenyke/core/exception.hpp>
 # include <xenyke/gl/window.hpp>
+# include <xenyke/gl/video_mode.hpp>
 
 XKE_NAMESPACE_BEGIN
 

@@ -1,8 +1,7 @@
 # ifndef XKE_GL_VERTEX_HPP
 # define XKE_GL_VERTEX_HPP
 
-# include <xenyke/core/vec.hpp>
-# include <xenyke/core/color.hpp>
+# include <xenyke/gl/fwd.hpp>
 
 XKE_NAMESPACE_BEGIN
 

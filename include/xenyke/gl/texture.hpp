@@ -1,17 +1,18 @@
 # ifndef XKE_GL_TEXTURE_HPP
 # define XKE_GL_TEXTURE_HPP
 
+# include <xenyke/gl/gl_object.hpp>
 # include <xenyke/core/vec.hpp>
 
 XKE_NAMESPACE_BEGIN
 
-class Texture
+class Texture : public GlObject
 {
 public:
     explicit Texture() noexcept;
     ~Texture() noexcept;
 
-    void destroy() noexcept;
+    void destroy() noexcept override;
 
     void loadFromFile(const std::string& filename);
     void use() const;
@@ -19,7 +20,7 @@ public:
     bool isLoaded() const;
 
 private:
-    idnumber_t id_;
+    GlObjectID id_;
     Vec2i size_;
     int32_t nrChannels_;
     bool isLoaded_;

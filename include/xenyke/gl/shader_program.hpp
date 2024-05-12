@@ -2,21 +2,20 @@
 # define XKE_GL_SHADER_PROGRAM_HPP
 
 # include <xenyke/gl/shader.hpp>
-# include <xenyke/gl/ext/glm/fwd.hpp> // for glm::mat4
+
 
 XKE_NAMESPACE_BEGIN
 
 using ProgramID = uint32_t;
 
-class ShaderProgram
+class ShaderProgram : public GlObject
 {
 public:
-    explicit ShaderProgram(const Shader& vertexShader, const Shader& fragmentShader);
     explicit ShaderProgram(const std::string& filename);
 
     ~ShaderProgram() noexcept = default;
 
-    void destroy();
+    void destroy() noexcept override;
     void use();
 
     void setBool(const std::string& name, bool value) const;

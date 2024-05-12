@@ -1,7 +1,7 @@
 # ifndef XKE_GL_VERTEX_ARRAY_HPP
 # define XKE_GL_VERTEX_ARRAY_HPP
 
-# include <xenyke/gl/primitive.hpp>
+# include <xenyke/gl/fwd.hpp>
 # include <xenyke/gl/vertex.hpp>
 # include <vector>
 
