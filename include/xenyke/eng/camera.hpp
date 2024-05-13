@@ -33,6 +33,9 @@ public:
     static glm::mat4 viewMat(const xke::Vec2f& pos);
 };
 
+using Camera2D = Camera<CameraType2D>;
+using Camera3D = Camera<CameraType3D>;
+
 XKE_NAMESPACE_END
 
 # include "camera.inl"
