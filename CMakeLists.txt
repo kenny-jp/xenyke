@@ -13,7 +13,7 @@ add_subdirectory(libs/)
 xke_add_module(core)
 # xke_add_module(logger)
 xke_add_module(gl)
-# xke_add_module(eng)
+xke_add_module(eng)
 
 target_link_libraries(xke-gl xke-core glfw)
 
