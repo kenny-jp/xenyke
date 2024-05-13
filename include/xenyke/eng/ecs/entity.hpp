@@ -10,32 +10,18 @@ namespace ecs {
 class Entity
 {
 public:
-    Entity();
-    Entity(entity_id_t id, size_t componentCapacity);
+    Entity() = default;
+    ~Entity() noexcept = default;
 
-    void set(entity_id_t id, size_t componentCapacity);
+    void init(entity_id_t id);
 
-    Entity(const Entity&) = delete;
-    Entity& operator=(const Entity&) = delete;
-    Entity(const Entity&&) noexcept;
-    Entity& operator=(const Entity&&) noexcept;
-
-    virtual ~Entity() noexcept;
-
-    operator entity_id_t() const
-    {
+    XKE_INLINE entity_id_t getId() const {
         return id_;
     }
 
-    bool operator==(const Entity& other);
-    bool operator!=(const Entity& other);
-
-    entity_signature_t operator&=(const ComponentType& t);
-    entity_signature_t operator|=(const ComponentType& t);
-    entity_signature_t operator^=(const ComponentType& t);
-
-    XKE_INLINE entity_signature_t getSign() const noexcept
-    { return sign_; }
+    void and_sign(const Entity& other);
+    void or_sign(const Entity& other);
+    void xor_sign(const Entity& other);
 
     friend
     bool operator==(const Entity& lhs, const Entity& rhs);
@@ -45,17 +31,21 @@ public:
 private:
     entity_id_t id_;
     entity_signature_t sign_;
+
+    friend struct EntityHash;
+    friend struct EntityKeyEqual;
+    friend class EntityManager;
 };
 
 struct EntityHash {
     std::size_t operator()(const Entity& entity) const {
-        return std::hash<entity_id_t>()(entity);
+        return std::hash<entity_id_t>()(entity.id_);
     }
 };
 
 struct EntityKeyEqual {
     bool operator()(const Entity& lhs, const Entity& rhs) const {
-        return lhs == rhs;
+        return lhs.id_ == rhs.id_;
     }
 };
 
