@@ -7,6 +7,6 @@ target_link_libraries(tests
     xke-core
     # xke-logger
     xke-gl
-    # xke-eng
+    xke-eng
 )
 target_include_directories(tests PRIVATE ${CMAKE_SOURCE_DIR}/include)
