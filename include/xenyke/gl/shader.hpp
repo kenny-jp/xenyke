@@ -10,10 +10,10 @@ class Shader : public GlObject
 public:
     explicit Shader() noexcept;
     Shader(const std::string& source, ShaderType type);
-    ~Shader() noexcept;
 
-    bool set(const std::string& source, ShaderType type);
+    ~Shader() noexcept = default;
 
+    bool init(const std::string& source, ShaderType type);
     void destroy() noexcept override;
 
 private:

@@ -11,12 +11,15 @@ using ProgramID = uint32_t;
 class ShaderProgram : public GlObject
 {
 public:
-    explicit ShaderProgram(const std::string& filename);
+    explicit ShaderProgram() noexcept;
+    ShaderProgram(const std::string& filename);
 
     ~ShaderProgram() noexcept = default;
 
-    void destroy() noexcept override;
     void use();
+    static void unuse();
+
+    void destroy() noexcept override;
 
     void setBool(const std::string& name, bool value) const;
     void setInt(const std::string& name, int32_t value) const;
@@ -25,11 +28,9 @@ public:
 
     ProgramID operator()() const;
 
-    static void stopUse();
-
 private:
+    void create(const std::string &filename);
     void link();
-    std::tuple<Shader, Shader> getShaders(std::string_view filename) const;
 
     ProgramID id_;
 };

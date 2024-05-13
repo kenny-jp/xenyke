@@ -10,17 +10,16 @@ Shader::Shader() noexcept
 }
 
 Shader::Shader(const std::string &source, ShaderType type)
+    : id_(INVALID_ID), type_(type)
 {
-    set(source, type);
+    init(source, type_);
 }
 
-Shader::~Shader() noexcept
+bool Shader::init(const std::string& source, ShaderType type)
 {
-
-}
-
-bool Shader::set(const std::string& source, ShaderType type)
-{
+    if (id_ != INVALID_ID) {
+        destroy();
+    }
     const char* s = source.c_str();
     type_ = type;
     id_ = glCreateShader(static_cast<enum_t>(type_));
@@ -32,6 +31,7 @@ bool Shader::set(const std::string& source, ShaderType type)
 void Shader::destroy() noexcept
 {
     glDeleteShader(id_);
+    id_ = INVALID_ID;
     type_ = ShaderType::NONE;
 }
 
