@@ -4,25 +4,10 @@ XKE_NAMESPACE_BEGIN
 
 namespace ecs {
 
-void Entity::init(entity_id_t id)
+void Entity::init(entity_id id)
 {
     id_ = id;
     sign_ = 0;
-}
-
-void Entity::and_sign(const Entity &other)
-{
-    sign_ &= other.sign_;
-}
-
-void Entity::or_sign(const Entity &other)
-{
-    sign_ |= other.sign_;
-}
-
-void Entity::xor_sign(const Entity &other)
-{
-    sign_ ^= other.sign_;
 }
 
 bool operator==(const Entity &lhs, const Entity &rhs)

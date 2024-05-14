@@ -11,14 +11,18 @@ namespace ecs {
 static constexpr size_t MAX_COMPONENTS {XKE_ENG_ECS_MAX_COMPONENTS};
 using Bitset = std::bitset<MAX_COMPONENTS>;
 
-using entity_id_t = int32_t;
-using entity_signature_t = uint64_t;
+using entity_id = int32_t;
+using component_type_id = int16_t;
 
-static constexpr entity_id_t INVALID_ENTITY_ID = -1;
+using entity_signature = uint64_t;
+using component_signature = entity_signature;
+
+static constexpr entity_id INVALID_ENTITY_ID = -1;
 
 class Entity;
-using component_signature_t = entity_signature_t;
 
+template<class T_>
+class ComponentObj;
 
 } // namespace ecs
 

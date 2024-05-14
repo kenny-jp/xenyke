@@ -13,15 +13,16 @@ public:
     Entity() = default;
     ~Entity() noexcept = default;
 
-    void init(entity_id_t id);
+    void init(entity_id id);
 
-    XKE_INLINE entity_id_t getId() const {
+    XKE_INLINE entity_id getId() const {
         return id_;
     }
 
-    void and_sign(const Entity& other);
-    void or_sign(const Entity& other);
-    void xor_sign(const Entity& other);
+    operator entity_id() const
+    {
+        return id_;
+    }
 
     friend
     bool operator==(const Entity& lhs, const Entity& rhs);
@@ -29,8 +30,8 @@ public:
     bool operator!=(const Entity& lhs, const Entity& rhs);
 
 private:
-    entity_id_t id_;
-    entity_signature_t sign_;
+    entity_id id_;
+    entity_signature sign_;
 
     friend struct EntityHash;
     friend struct EntityKeyEqual;
@@ -39,7 +40,7 @@ private:
 
 struct EntityHash {
     std::size_t operator()(const Entity& entity) const {
-        return std::hash<entity_id_t>()(entity.id_);
+        return std::hash<entity_id>()(entity.id_);
     }
 };
 

@@ -13,7 +13,8 @@ namespace ecs {
 class EntityManager
 {
     using unordered_entity_set = std::unordered_set<Entity, EntityHash, EntityKeyEqual>;
-    using entity_stack = std::stack<entity_id_t>;
+    using entity_id_stack = std::stack<entity_id>;
+    using entities_map = std::unordered_map<entity_id, Entity&>;
 
 public:
     EntityManager(int32_t capacity);
@@ -21,11 +22,12 @@ public:
 
     Entity& newEntity();
     void deleteEntity(const Entity& entity);
-    void deleteEntity(entity_id_t entityID);
+    Entity& getEntityType(entity_id id);
+    const Entity &getEntityType(entity_id id) const;
 
-    void addComponent(Entity& entity, component_signature_t cmp);
-    void removeComponent(Entity& entity, component_signature_t cmp);
-    bool hasComponent(Entity& entity, component_signature_t cmp);
+    void addComponent(Entity& entity, component_type_id cmp);
+    void removeComponent(Entity& entity, component_type_id cmp);
+    bool hasComponent(Entity& entity, component_type_id cmp);
 
     const unordered_entity_set& getEntityList() const;
     int32_t getEntitiesCount() const;
@@ -34,8 +36,9 @@ private:
     const int32_t capacity_;
     int32_t entitiesCount_;
 
-    entity_stack availableEntityIds_;
+    entity_id_stack availableEntityIds_;
     unordered_entity_set activeEntities_;
+    entities_map entitiesMap_;
 };
 
 } // namespace ecs
