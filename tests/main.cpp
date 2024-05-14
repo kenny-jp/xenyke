@@ -10,25 +10,14 @@
 // #include <xenyke/eng/transform.hpp>
 
 #include <xenyke/core/debug.hpp>
-#include <xenyke/eng/ecs/entity.hpp>
+#include <xenyke/eng/ecs/entity_manager.hpp>
 
 int main()
 {
     using namespace xke;
     using namespace xke::ecs;
 
-    xkeDebug() << std::is_trivial<Entity>::value << xke::flush;
-
-    uint32_t n(0);
-
-    // n |= (1 << 0);
-    // n |= (1 << 1);
-    n |= (1 << 2);
-    n ^= (1 << 2);
-    // n |= (1 << 3);
-    // n |= 3;
-
-    xkeDebug() << "n value: " << n << xke::endl;
+    xkeDebug() << std::is_trivial<Entity>::value << xke::endl;
 
     return 0;
 
