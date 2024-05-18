@@ -17,7 +17,23 @@ int main()
     using namespace xke;
     using namespace xke::ecs;
 
-    xkeDebug() << std::is_trivial<Entity>::value << xke::endl;
+    EntityPool pool(50);
+
+    xkeDebug() << pool.size() << xke::endl;
+
+    for(int i = 0; i < 10; i++){
+        Entity e;
+        set_entity_id(e, i);
+        pool.insert(e);
+    }
+
+    xkeDebug() << pool.size() << xke::endl;
+
+    Entity e;
+    set_entity_id(e, 58);
+    pool.destroy(e);
+
+    xkeDebug() << pool.size() << xke::endl;
 
     return 0;
 
