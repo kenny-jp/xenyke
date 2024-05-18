@@ -7,48 +7,38 @@ XKE_NAMESPACE_BEGIN
 
 namespace ecs {
 
-class Entity
+using EntityID = uint32_t;
+using EntitySignature = uint32_t;
+
+using Entity = uint64_t;
+
+XKE_INLINE_CONSTEXPR EntityID get_entity_id(Entity e)
 {
-public:
-    Entity() = default;
-    ~Entity() noexcept = default;
+    XKE_CONSTEXPR auto id_bits = sizeof(EntityID) * CHAR_BIT;
+    return static_cast<EntityID>(e >> id_bits);
+}
 
-    void init(entity_id id);
+XKE_INLINE_CONSTEXPR EntitySignature get_entity_signature(Entity e)
+{
+    XKE_CONSTEXPR auto signature_mask = (1ULL << (sizeof(EntitySignature) * CHAR_BIT)) - 1;
+    return static_cast<EntitySignature>(e & signature_mask);
+}
 
-    XKE_INLINE entity_id getId() const {
-        return id_;
-    }
 
-    operator entity_id() const
-    {
-        return id_;
-    }
+XKE_INLINE_CONSTEXPR void set_entity_id(Entity& e, EntityID id)
+{
+    XKE_CONSTEXPR auto id_bits = sizeof(EntityID) * CHAR_BIT;
+    XKE_CONSTEXPR auto signature_mask = (1ULL << (sizeof(EntitySignature) * CHAR_BIT)) - 1;
 
-    friend
-    bool operator==(const Entity& lhs, const Entity& rhs);
-    friend
-    bool operator!=(const Entity& lhs, const Entity& rhs);
+    e = (static_cast<Entity>(id) << id_bits) | (e & signature_mask);
+}
 
-private:
-    entity_id id_;
-    entity_signature sign_;
+XKE_INLINE_CONSTEXPR void set_entity_signature(Entity& e, EntitySignature signature)
+{
+    XKE_CONSTEXPR auto signature_mask = (1ULL << (sizeof(EntitySignature) * CHAR_BIT)) - 1;
 
-    friend struct EntityHash;
-    friend struct EntityKeyEqual;
-    friend class EntityManager;
-};
-
-struct EntityHash {
-    std::size_t operator()(const Entity& entity) const {
-        return std::hash<entity_id>()(entity.id_);
-    }
-};
-
-struct EntityKeyEqual {
-    bool operator()(const Entity& lhs, const Entity& rhs) const {
-        return lhs.id_ == rhs.id_;
-    }
-};
+    e = (e & ~signature_mask) | (static_cast<Entity>(signature) & signature_mask);
+}
 
 } // namespace ecs
 
