@@ -1,9 +1,10 @@
 # ifndef XKE_ENG_ECS_ENTITY_MANAGER_HPP
 # define XKE_ENG_ECS_ENTITY_MANAGER_HPP
 
-# include <xenyke/eng/ecs/entity.hpp>
-# include <xenyke/eng/ecs/entity_pool.hpp>
-# include <queue>
+# include <xenyke/eng/ecs/entity_allocator.hpp>
+# include <unordered_map>
+
+# include <xenyke/core/debug.hpp>
 
 XKE_NAMESPACE_BEGIN
 
@@ -11,41 +12,56 @@ namespace ecs {
 
 class EntityManager
 {
+    using IDAllocator = EntityIDAllocator<EntityID>;
+
 public:
-    EntityManager() : nextEntityID_(0)
-    {
+    explicit EntityManager() noexcept = default;
 
+    EntityManager(size_t preallocated_entities)
+    {
+        reserve(preallocated_entities);
     }
 
-    Entity createEntity()
+    EntityID createEntity()
     {
-        Entity entity;
-
-        if (!freeIds_.empty()) {
-            set_entity_id(entity, freeIds_.front());
-            freeIds_.pop();
-        } else {
-            set_entity_id(entity, nextEntityID_++);
-        }
-
-        return entity;
+        EntityID id = idAlloc_.allocate();
+        allocatedEntities_.insert({id, NULL_ENTITY_SIGNATURE});
+        xkeDebug() << "Entity " << static_cast<IDAllocator::IDType>(id) << " created.\n";
+        return id;
     }
 
-    void destroyEntity(Entity entity)
+    std::vector<EntityID> createEntities(size_t n)
     {
-        const EntityID id = get_entity_id(entity);
-        if (id < nextEntityID_) {
-            freeIds_.push(id);
+        std::vector<EntityID> ids = idAlloc_.allocate(n);
 
-
+        for (size_t i {0}; i < ids.size(); ++i) {
+            allocatedEntities_.insert({ids[i], NULL_ENTITY_SIGNATURE});
+            xkeDebug() << "Entity " << static_cast<IDAllocator::IDType>(ids[i]) << " created.\n";
         }
+
+        return ids;
+    }
+
+    void destroyEntity(EntityID id)
+    {
+        __xke_assert(allocatedEntities_.contains(id));
+
+        allocatedEntities_.erase(id);
+        idAlloc_.deallocate(id);
+
+        xkeDebug() << "Entity " << static_cast<IDAllocator::IDType>(id) << " deleted.\n";
+    }
+
+// protected:
+    void reserve(size_t capacity)
+    {
+        idAlloc_.reserve(capacity);
+        allocatedEntities_.reserve(capacity);
     }
 
 private:
-    EntityID nextEntityID_;
-    std::queue<EntityID> freeIds_;
-    EntityPool entityPool_;
-
+    IDAllocator idAlloc_;
+    std::unordered_map<EntityID, EntitySignature> allocatedEntities_;
 };
 
 
