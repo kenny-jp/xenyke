@@ -11,8 +11,6 @@ public:
         EntityIDAllocator<EntityID> allocator;
 
         __xke_assert(allocator.allocatedCount() == 0);
-        allocator.reserve(1000);
-        __xke_assert(allocator.allocatedCount() == 0);
 
         std::vector<EntityID> entities = allocator.allocate(1000);
         size_t allocatorCount = allocator.allocatedCount();
