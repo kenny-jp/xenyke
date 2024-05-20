@@ -4,8 +4,6 @@
 # include <xenyke/eng/ecs/entity_allocator.hpp>
 # include <unordered_map>
 
-# include <xenyke/core/debug.hpp>
-
 XKE_NAMESPACE_BEGIN
 
 namespace ecs {
@@ -13,6 +11,8 @@ namespace ecs {
 class EntityManager
 {
     using IDAllocator = EntityIDAllocator<EntityID>;
+    using EntityMap   = std::unordered_map<EntityID, EntitySignature>;
+    using Iterator    = EntityMap::iterator;
 
 public:
     explicit EntityManager() noexcept = default;
@@ -26,7 +26,6 @@ public:
     {
         EntityID id = idAlloc_.allocate();
         allocatedEntities_.insert({id, NULL_ENTITY_SIGNATURE});
-        xkeDebug() << "Entity " << static_cast<IDAllocator::IDType>(id) << " created.\n";
         return id;
     }
 
@@ -36,32 +35,74 @@ public:
 
         for (size_t i {0}; i < ids.size(); ++i) {
             allocatedEntities_.insert({ids[i], NULL_ENTITY_SIGNATURE});
-            xkeDebug() << "Entity " << static_cast<IDAllocator::IDType>(ids[i]) << " created.\n";
         }
 
         return ids;
     }
 
-    void destroyEntity(EntityID id)
+    EntitySignature& getEntitySignature(EntityID id)
+    {
+        __xke_assert(allocatedEntities_.contains(id));
+
+        return allocatedEntities_[id];
+    }
+
+    EntitySignature getEntitySignature(EntityID id) const
+    {
+        __xke_assert(allocatedEntities_.contains(id));
+
+        return allocatedEntities_.at(id);
+    }
+
+    void entityDestroyed(EntityID id)
     {
         __xke_assert(allocatedEntities_.contains(id));
 
         allocatedEntities_.erase(id);
         idAlloc_.deallocate(id);
-
-        xkeDebug() << "Entity " << static_cast<IDAllocator::IDType>(id) << " deleted.\n";
     }
 
-// protected:
     void reserve(size_t capacity)
     {
         idAlloc_.reserve(capacity);
         allocatedEntities_.reserve(capacity);
     }
 
+    void addComponentType(EntityID id, ComponentType type)
+    {
+        EntitySignature& sign = allocatedEntities_[id];
+        sign |= (1 << type);
+    }
+
+    void removeComponentType(EntityID id, ComponentType type)
+    {
+        EntitySignature& sign = allocatedEntities_[id];
+        sign ^= (1 << type);
+    }
+
+    size_t entitiesCount() const
+    {
+        return allocatedEntities_.size();
+    }
+
+    EntityMap entitiesMap() const
+    {
+        return allocatedEntities_;
+    }
+
+    Iterator begin()
+    {
+        return allocatedEntities_.begin();
+    }
+
+    Iterator end()
+    {
+        return allocatedEntities_.end();
+    }
+
 private:
     IDAllocator idAlloc_;
-    std::unordered_map<EntityID, EntitySignature> allocatedEntities_;
+    EntityMap allocatedEntities_;
 };
 
 

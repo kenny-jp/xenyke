@@ -1,12 +1,9 @@
 # ifndef XKE_ENG_ECS_COMPONENT_POOL_HPP
 # define XKE_ENG_ECS_COMPONENT_POOL_HPP
 
-# include <xenyke/eng/ecs/entity.hpp>
-# include <xenyke/eng/ecs/component.hpp>
+# include <xenyke/eng/ecs/component_obj.hpp>
 # include <unordered_map>
 # include <vector>
-
-# include  <xenyke/core/debug.hpp>
 
 XKE_NAMESPACE_BEGIN
 
@@ -71,10 +68,8 @@ public:
 
         if (data_.size() <= size_) {
             data_.push_back(std::move(obj));
-            xkeDebug() << "Data insered via push_back\n";
         } else {
             data_[size_] = std::move(obj);
-            xkeDebug() << "Data insered via replace end data\n";
         }
 
         entityToIndex_[id] = index;
@@ -101,9 +96,12 @@ public:
         entityToIndex_.erase(id);
         indexToEntity_.erase(indexOfLastElement);
 
-        xkeDebug() << "Data removed\n";
-
         size_--;
+    }
+
+    T_& getData(EntityID id)
+    {
+        return *data_[entityToIndex_.at(id)].getData();
     }
 
     void entityDestroyed(EntityID id) override

@@ -1,7 +1,7 @@
 # ifndef XKE_ENG_ECS_ENTITY_POOL_HPP
 # define XKE_ENG_ECS_ENTITY_POOL_HPP
 
-# include <xenyke/eng/ecs/entity.hpp>
+# include <xenyke/eng/ecs/fwd.hpp>
 # include <limits>
 # include <queue>
 
@@ -89,6 +89,11 @@ public:
         }
 
         freeIds_ = std::queue<EntityIDType>(std::deque<EntityIDType>(preallocated.begin(), preallocated.end()));
+    }
+
+    size_t allocatedCount() const
+    {
+        return nextEntityID_ - freeIds_.size();
     }
 
 private:
