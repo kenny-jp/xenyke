@@ -64,7 +64,6 @@ public:
 
     void reserve(size_t capacity)
     {
-        idAlloc_.reserve(capacity);
         allocatedEntities_.reserve(capacity);
     }
 

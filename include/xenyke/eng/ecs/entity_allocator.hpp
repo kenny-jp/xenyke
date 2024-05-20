@@ -78,19 +78,6 @@ public:
         freeIds_.push(id);
     }
 
-    void reserve(size_t capacity)
-    {
-        std::vector<EntityIDType> preallocated;
-        preallocated.reserve(capacity);
-
-        while (!freeIds_.empty()) {
-            preallocated.push_back(freeIds_.front());
-            freeIds_.pop();
-        }
-
-        freeIds_ = std::queue<EntityIDType>(std::deque<EntityIDType>(preallocated.begin(), preallocated.end()));
-    }
-
     size_t allocatedCount() const
     {
         return nextEntityID_ - freeIds_.size();

@@ -16,10 +16,18 @@ public:
 
     }
 
+    ComponentManager(size_t preallocated_component)
+        : nextComponentType_(0)
+    {
+        reserve(preallocated_component);
+    }
+
     template<class T_>
     void registerComponent()
     {
         const char* typeName = typeid(T_).name();
+
+        __xke_assert(!registeredComponentTypes_.contains(typeName));
 
         registeredComponentTypes_.insert({typeName, nextComponentType_++});
 
@@ -81,6 +89,12 @@ public:
         for (const auto& pair : componentPools_) {
             pair.second->entityDestroyed(id);
         }
+    }
+
+    void reserve(size_t capacity)
+    {
+        registeredComponentTypes_.reserve(capacity);
+        componentPools_.reserve(capacity);
     }
 
 private:
