@@ -4,7 +4,7 @@
 # include <xenyke/eng/ecs/fwd.hpp>
 # include <limits>
 # include <queue>
-
+# include <atomic>
 
 XKE_NAMESPACE_BEGIN
 
@@ -39,7 +39,7 @@ public:
     using EntityIDType = Traits::entity_id_type;
 
     static XKE_INLINE_CONSTEXPR
-    IDType INVALID_ENTITY_ID = std::numeric_limits<IDType>::max();
+    EntityIDType INVALID_ENTITY_ID = static_cast<EntityIDType>(std::numeric_limits<IDType>::max());
 
 public:
     EntityIDAllocator() : nextEntityID_(0)
@@ -56,7 +56,7 @@ public:
             freeIds_.pop();
         }
 
-        __xke_assert(static_cast<IDType>(id) != INVALID_ENTITY_ID);
+        __xke_assert(id != INVALID_ENTITY_ID);
 
         return id;
     }
@@ -80,11 +80,13 @@ public:
 
     size_t allocatedCount() const
     {
+        __xke_assert(nextEntityID_ >= freeIds_.size());
         return nextEntityID_ - freeIds_.size();
     }
 
 private:
-    IDType nextEntityID_;
+    std::atomic<IDType> nextEntityID_;
+    // IDType nextEntityID_;
     std::queue<EntityIDType> freeIds_;
 };
 
