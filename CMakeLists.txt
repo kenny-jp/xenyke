@@ -23,5 +23,7 @@ else()
     set(EXPORT_TARGETS xke-core xke-logger xke-gl glfw)
 endif()
 
+add_subdirectory(libs/googletest/)
+
 add_subdirectory(tests/)
 
