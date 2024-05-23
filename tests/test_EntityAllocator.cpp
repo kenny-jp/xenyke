@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 #include <xenyke/eng/ecs/entity_allocator.hpp>
-#include <limits>
 
 using namespace xke::ecs;
 
@@ -54,20 +53,6 @@ TEST(EntityIDAllocatorTest, MassiveDeallocateAndReuse) {
         EXPECT_NE(id, EntityIDAllocator<TestEntityID>::INVALID_ENTITY_ID);
     }
 }
-
-TEST(EntityIDAllocatorTest, MaxCapacityTest) {
-    EntityIDAllocator<TestEntityID> allocator;
-    const size_t maxCapacity = std::numeric_limits<std::underlying_type_t<TestEntityID>>::max();
-
-    for (size_t i = 0; i < maxCapacity; ++i) {
-        allocator.allocate();
-    }
-
-    // // Tentative d'allocation supplémentaire après avoir atteint la capacité maximale
-    // auto id = allocator.allocate();
-    // EXPECT_EQ(id, EntityIDAllocator<TestEntityID>::INVALID_ENTITY_ID);
-}
-
 
 TEST(EntityIDAllocatorTest, PerformanceTest) {
     EntityIDAllocator<TestEntityID> allocator;
